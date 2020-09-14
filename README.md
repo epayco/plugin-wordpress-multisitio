@@ -2,16 +2,10 @@
 
 **Si usted tiene alguna pregunta o problema, no dude en ponerse en contacto con nuestro soporte técnico: desarrollo@payco.co.**
 
-## Versiones
-
-* [ePayco plugin WooCommerce v4.4.x](https://github.com/epayco/plugin-wordpress-multisitio/releases/tag/v4.4.x).
-
-
 ## Tabla de contenido
 
 * [Requisitos](#requisitos)
 * [Instalación](#instalación)
-* [Pasos](#pasos)
 * [Versiones](#versiones)
 
 ## Requisitos
@@ -35,3 +29,6 @@
 10. Si todo está bien recuerda cambiar la variable Modo Prueba a NO y empieza a recibir pagos de forma instantánea y segura con ePayco.
 
 
+## Versiones
+
+* [ePayco plugin WooCommerce v4.4.x](https://github.com/epayco/plugin-wordpress-multisitio/releases/tag/v4.4.x).
