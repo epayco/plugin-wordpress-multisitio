@@ -16,8 +16,6 @@ function woocommerce_epayco_init()
 {
     if (!class_exists('WC_Payment_Gateway')) return;
 
-    //load_plugin_textdomain('payu', false, dirname(plugin_basename(__FILE__)) . '/lang/');
-
     include_once('includes/class-woocommerce-epayco.php');
 
     add_filter('woocommerce_payment_gateways', 'woocommerce_epayco_add_gateway');

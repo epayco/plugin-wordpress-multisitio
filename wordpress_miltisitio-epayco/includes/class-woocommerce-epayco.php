@@ -1,8 +1,4 @@
 <?php
-
-//require_once 'lib/openpayu.php';
-
-
 class WC_Gateway_Epayco extends WC_Payment_Gateway
 {
     private $pluginVersion = '1.3.0';
