@@ -1,12 +1,7 @@
 <?php
-
-//require_once 'lib/openpayu.php';
-
-
 class WC_Gateway_Epayco extends WC_Payment_Gateway
 {
     private $pluginVersion = '1.3.0';
-
     private $epayco_feedback;
     private $sandbox;
     private $enable_for_shipping;
@@ -16,17 +11,16 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
         $this->setup_properties();
         $this->init_form_fields();
         $this->init_settings();
-
         $this->title               = $this->get_option('title');
         $this->description         = $this->get_option('description');
         $this->epayco_feedback       = $this->get_option('epayco_feedback', true);
-       // $this->sandbox             = $this->get_option('sandbox', false);
-       // $this->enable_for_shipping = $this->get_option( 'enable_for_shipping', []);
         $this->epayco_customerid = $this->get_option('epayco_customerid');
         $this->epayco_secretkey = $this->get_option('epayco_secretkey');
         $this->epayco_publickey = $this->get_option('epayco_publickey');
         $this->epayco_description = $this->get_option('epayco_description');
         $this->epayco_testmode = $this->get_option('epayco_testmode');
+        $this->epayco_lang = $this->get_option('epayco_lang');
+        $this->epayco_type_checkout = $this->get_option('epayco_type_checkout');
 
         // Saving hook
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
@@ -231,11 +225,15 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
                     $tax=0;
                 }
 
-          
-                 $test_mode = $this->epayco_testmode == "yes" ? "true" : "false";
+                $external_type = $this->epayco_type_checkout;
+          		$epayco_lang = $this->epayco_lang;
+          		if ($epayco_lang == 'es') {
+          			$message = '<small class="epayco-subtitle"> Si no se cargan automáticamente, de clic en el botón "Pagar con ePayco"</small>';
+          		}else{
+          			$message = '<small class="epayco-subtitle">If they are not charged automatically, click the  "Pagar con ePayco" button</small>';
+          		}
+          		$test_mode = $this->epayco_testmode == "yes" ? "true" : "false";
               
-              // var_dump("expression",$descripcion,$confirm_url,$redirect_url);
-              // die();
                echo('
                     <style>
                         .epayco-title{
@@ -355,9 +353,8 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
                         </div>
                         <p style="text-align: center;" class="epayco-title">
                             <span class="animated-points">Cargando metodos de pago</span>
-                           <br><small class="epayco-subtitle"> Si no se cargan automáticamente, de clic en el botón "Pagar con ePayco"</small>
+                           <br>'.$message.'
                         </p>
-
                            <div id="epayco_form" style="text-align: center;">
                            <center>
                           <a onclick="payment()"><img src="https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco5.png"> </a>
@@ -390,17 +387,17 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
                           mobilephone_billing: "%s",
                           force_response: true
                           }               
-                   console.log(data);
+                   
                     setTimeout(function(){ 
-                console.log("dos");
+               
                      handlerEpayco.open(data);  }, 2000);
                           }
       </script>
 
 
                           </div>       
-                ',$this->epayco_publickey,$test_mode,$order->get_total(),$tax,$base_tax, $descripcion, $descripcion, $currency, $order->get_id(), $basedCountry, 'false', $redirect_url,$confirm_url,
-                    $email_billing,$name_billing,$address_billing,'ES',$phone_billing);
+                ',$this->epayco_publickey,$test_mode,$order->get_total(),$tax,$base_tax, $descripcion, $descripcion, $currency, $order->get_id(), $basedCountry, $external_type, $redirect_url,$confirm_url,
+                    $email_billing,$name_billing,$address_billing,$epayco_lang,$phone_billing);
                    
                     $messageload = __('Espere por favor..Cargando checkout.','payco-woocommerce');
                     $js = "if(jQuery('button.epayco-button-render').length)    
@@ -439,8 +436,8 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
 
            function ePayco_successful_request($validationData)
             {
-               
-                         global $woocommerce;
+            
+                    global $woocommerce;
                     $order_id="";
                     $ref_payco="";
                     $signature="";
@@ -455,7 +452,7 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
                         $explode=explode('?',$_GET['order_id']);
                         $order_id=$explode[0];
                         $strref_payco=explode("=",$explode[1]);
-                        $ref_payco=$_REQUEST['ref_payco'];
+                        $ref_payco=$strref_payco[1];
                         $url = 'https://secure.epayco.co/validation/v1/reference/'.$ref_payco;
                         $responseData = $this->agafa_dades($url,false,$this->goter());
                         $jsonData = @json_decode($responseData, true);
@@ -739,11 +736,19 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
                     'default' => 'no',
                     'desc_tip' => true
                 ),
+                'epayco_lang' . $idSuffix => array(
+                    'title' => $namePrefix . __('Idioma del Checkout', 'epayco'),
+                    'type' => 'select',
+                    'description' => __('Habilite para realizar pruebas', 'epayco'),
+                      'options' => array('es'=>"Español","en"=>"Inglés"),
+                    'desc_tip' => true
+                ),
                 'epayco_type_checkout' . $idSuffix => array(
                     'title' => $namePrefix . __('Tipo Checkout', 'epayco'),
-                    'type' => 'text',
+                    'type' => 'select',
                     'label' => __('Seleccione un tipo de Checkout:', 'epayco'),
                     'description' => __('(Onpage Checkout, el usuario al pagar permanece en el sitio) ó (Standart Checkout, el usario al pagar es redireccionado a la pasarela de ePayco)', 'epayco'),
+                    'options' => array('false'=>"Onpage Checkout","true"=>"Standart Checkout"),
                     'desc_tip' => true
                 )
              
