@@ -32,3 +32,4 @@
 ## Versiones
 
 * [ePayco plugin WooCommerce v4.4.x](https://github.com/epayco/plugin-wordpress-multisitio/releases/tag/v4.4.x).
+* [ePayco plugin WooCommerce v4.7.x](https://github.com/epayco/plugin-wordpress-multisitio/releases/tag/V4.7.X).
