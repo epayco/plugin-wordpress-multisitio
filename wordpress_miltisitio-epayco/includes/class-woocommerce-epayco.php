@@ -356,7 +356,7 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
 
                            <div id="epayco_form" style="text-align: center;">
                            <center>
-                          <a onclick="payment()"><img src="https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/btns/epayco/boton_de_cobro_epayco5.png"> </a>
+                          <a onclick="payment()"><img src="https://multimedia.epayco.co/epayco-landing/btns/Boton-epayco-color1.png"></a>
                           </center>
                           <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
                             <script type="text/javascript" src="https://checkout.epayco.co/checkout.js"></script>
