@@ -42,7 +42,7 @@ class WC_Gateway_Epayco extends WC_Payment_Gateway
      */
     protected function setup_properties() {
         $this->id                 = 'epayco';
-        $this->icon               = apply_filters('woocommerce_epayco_icon', 'https://369969691f476073508a-60bf0867add971908d4f26a64519c2aa.ssl.cf5.rackcdn.com/logos/logo_epayco_200px.png');
+        $this->icon               = apply_filters('woocommerce_epayco_icon', '/images/paymentLogo.svg');
         $this->method_title       = __('ePayco Checkout', 'epayco');
         $this->method_description = __('Acepta tarjetas de credito, depositos y transferencias.', 'epayco');
         $this->has_fields         = false;
